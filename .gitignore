@@ -24,3 +24,20 @@ dist/
 
 # Logs
 *.log
+
+# Django / Python
+*.sqlite3
+__pycache__/
+*.py[cod]
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Node
+node_modules/
+dist/
+
+# macOS
+.DS_Store
