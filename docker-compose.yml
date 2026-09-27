@@ -1,0 +1,26 @@
+services:
+  db:
+    image: postgres:16
+    container_name: ec-recommendation-db
+    environment:
+      POSTGRES_USER: ec_user
+      POSTGRES_PASSWORD: ec_password
+      POSTGRES_DB: ec_recommendation
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  fastapi:
+    build:
+      context: ./backend/fastapi
+    container_name: ec-recommendation-fastapi
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/fastapi/app:/app/app
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
