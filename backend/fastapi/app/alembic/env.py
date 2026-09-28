@@ -18,6 +18,22 @@ if config.config_file_name is not None:
 target_metadata = Base.metadata
 
 
+def include_object(
+    object,
+    name,
+    type_,
+    reflected,
+    compare_to,
+):
+    # DBには存在するがSQLAlchemyのmetadataには存在しないテーブルは
+    # Alembicの管理対象外として扱う。
+    # Djangoが管理するauth_* / django_*テーブルなどを削除させない。
+    if type_ == "table" and reflected and compare_to is None:
+        return False
+
+    return True
+
+
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
     "postgresql+psycopg://ec_user:ec_password@db:5432/ec_recommendation",
@@ -51,6 +67,7 @@ def run_migrations_online() -> None:
         context.configure(
             connection=connection,
             target_metadata=target_metadata,
+            include_object=include_object,
         )
 
         with context.begin_transaction():
